@@ -1,27 +1,55 @@
-Welcome to Glitch
-=================
+# nodejs-express
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+This is a starter kit for `nodejs` with `express`. To get started:
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+```
+yarn
+yarn start
+```
 
-Find out more [about Glitch](https://glitch.com/about).
+## Development
 
+The entrypoint for the server lives in `src/index.js`.
 
-Your Project
-------------
+If you wish to add a new route (say `/greet`) , you can:
 
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+### Adding a route
 
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
+#### Option 1
 
+Add it yourself manually as:
+  
+```js
+const requestHandler = (req, res) => {
+  return res.json({
+    "greeting": "have a nice day"
+  });
+}
 
-Made by [Glitch](https://glitch.com/)
--------------------
+app.post('/greet', requestHandler);
+```
 
-\ ゜o゜)ノ
+#### Option 2
+
+Use dynamic imports.
+If you want to add a route (say `/greet`), you can just add a new file called `greet.js` in `src/handlers`. This file must have a default export function that behaves as a request handler.
+
+Example of `greet.js`
+
+```js
+const greetHandler = (req, res) => {
+  return res.json({
+    "greeting"
+  })
+}
+```
+
+### Throwing erros
+
+You can throw an error object or a list of error objects from your handler. The response must be 4xx and the error object must have a string field called `message`.
+
+```js
+retun res.status(400).json({
+  message: 'invalid email'
+});
+```
