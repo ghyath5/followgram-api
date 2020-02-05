@@ -3,9 +3,7 @@ const handler = (req, resp) => {
   const { numbers } = req.body.input;
   try {
     return resp.json({
-      data: {
-        sum: numbers.reduce((s, n) => s + n)
-      }
+      sum: numbers.reduce((s, n) => s + n, 0)
     });
   } catch(e) {
     console.error(e)
