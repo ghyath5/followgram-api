@@ -11,7 +11,8 @@ app.post('/:route', (req, res) => {
   try {
     const handler = require(`./handlers/${req.params.route}`).default;
     return handler(req, res);
-  } catch (_){
+  } catch (e){
+    console.error(e);
     return res.status(404).json({
       message: 'not found'
     });

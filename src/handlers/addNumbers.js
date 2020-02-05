@@ -7,7 +7,8 @@ const handler = (req, resp) => {
         sum: numbers.reduce((s, n) => s + n)
       }
     });
-  } catch(_) {
+  } catch(e) {
+    console.error(e)
     return resp.status(500).json({
       message: 'unexpected'
     })
