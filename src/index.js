@@ -1,5 +1,5 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+import express from "express";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -8,13 +8,14 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.post('/:route', (req, res) => {
-  const handler = require(`./handlers/${req.params.route}`).default;
-  if (!handler) {
+  try {
+    const handler = require(`./handlers/${req.params.route}`).default;
+    return handler(req, res);
+  } catch (_){
     return res.status(404).json({
       message: 'not found'
     });
-  }
-  return handler(req, res);
+  } 
 })
 
 app.listen(PORT);
