@@ -13,4 +13,4 @@ const handler = (req, resp) => {
   }
 };
 
-export default handler;
+module.exports = handler;

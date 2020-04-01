@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 app.post('/:route', (req, res) => {
   try {
-    const handler = require(`./handlers/${req.params.route}`).default;
+    const handler = require(`./handlers/${req.params.route}`);
     return handler(req, res);
   } catch (e){
     console.error(e);
