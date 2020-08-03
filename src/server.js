@@ -4,11 +4,9 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-import {
-  IgApiClient,
-  IgLoginTwoFactorRequiredError
-} from "instagram-private-api";
+
 import jwt from "jsonwebtoken";
+import Storage from './gqlClient'
 app.use(bodyParser.json());
 
 // paste the code from codegen here
