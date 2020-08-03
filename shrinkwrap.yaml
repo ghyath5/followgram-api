@@ -1,6 +1,7 @@
 dependencies:
   body-parser: 1.19.0
   express: 4.17.1
+  graphql-request: 2.0.0
   instagram-private-api: 1.41.0
   jsonwebtoken: 8.5.1
   node-fetch: 2.6.0
@@ -872,6 +873,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
+  /graphql-request/2.0.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-Ww3Ax+G3l2d+mPT8w7HC9LfrKjutnCKtnDq7ZZp2ghVk5IQDjwAk3/arRF1ix17Ky15rm0hrSKVKxRhIVlSuoQ==
   /har-schema/2.0.0:
     dev: false
     engines:
@@ -2489,6 +2496,7 @@ specifiers:
   body-parser: 1.19.0
   esm: ^3.2.25
   express: ^4.17.1
+  graphql-request: ^2.0.0
   instagram-private-api: ^1.41.0
   jsonwebtoken: ^8.5.1
   node-fetch: 2.6.0
