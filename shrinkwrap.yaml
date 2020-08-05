@@ -1,5 +1,6 @@
 dependencies:
   body-parser: 1.19.0
+  cross-fetch: 3.0.5
   express: 4.17.1
   graphql-request: 2.0.0
   instagram-private-api: 1.41.0
@@ -455,6 +456,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-Br56vvlHo/FKMP1hBnHUAbyot7Y=
+  /cross-fetch/3.0.5:
+    dependencies:
+      node-fetch: 2.6.0
+    dev: false
+    resolution:
+      integrity: sha512-FFLcLtraisj5eteosnX1gf01qYDCOc4fDy0+euOt8Kn9YBY2NtXL/pCoYPavw24NIQkQqm5ZOLsGD5Zzj0gyew==
   /cross-spawn/5.1.0:
     dependencies:
       lru-cache: 4.1.5
@@ -2494,6 +2501,7 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   body-parser: 1.19.0
+  cross-fetch: ^3.0.5
   esm: ^3.2.25
   express: ^4.17.1
   graphql-request: ^2.0.0

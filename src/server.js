@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 import jwt from "jsonwebtoken";
-import Storage from './gqlClient'
+import instagram from './instagram'
 app.use(bodyParser.json());
 
 // paste the code from codegen here
@@ -15,11 +15,8 @@ app.use(bodyParser.json());
 app.post("/login", async (req, res) => {
   // get request input
   const { username, password } = req.body.input;
-
-  const ig = new IgApiClient();
-  ig.state.generateDevice(username);
-  let user = await ig.account.login(username, password);
-  console.log(user);
+  let user = await instagram.login({username,password})
+  console.log(user)
   // return res.status(400).json({
   //   message: "error happened"
   // })
