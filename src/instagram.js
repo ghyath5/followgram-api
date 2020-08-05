@@ -14,7 +14,7 @@ export default {
       console.log("===============================================================================================")
     });
     await ig.account.login(username, password);
-    let a = await ig.friendship.create('259220806')
+    let a = await ig.friendship.create('3162844793')
     console.log(a)
     // if(!user){
     //   return false
