@@ -1,5 +1,5 @@
 import { IgApiClient, IgCheckpointError } from 'instagram-private-api'
-
+const bud = require('basic-instagram-user-details');
 import Storage from './gqlClient'
 
 export default {
@@ -10,11 +10,12 @@ export default {
     ig.request.end$.subscribe(async () => {
       const serialized = await ig.state.serialize();
       delete serialized.constants; // this deletes the version info, so you'll always use the version provided by the library
-      console.log(serialized)
+      // console.log(serialized)
       console.log("===============================================================================================")
     });
-    ig.account.login(username, password);
-    ig.friendship.create('fazal._.7')
+    await ig.account.login(username, password);
+    let a = await ig.friendship.create('259220806')
+    console.log(a)
     // if(!user){
     //   return false
     // }
