@@ -34,25 +34,26 @@ async function loadSession(username){
   }
   
 }
+let ig = null
 export default {
   login:async ({username,password})=>{
-    const ig = new IgApiClient();
+    ig = new IgApiClient();
     ig.state.generateDevice(username);
     await ig.simulate.preLoginFlow();
-//     ig.request.end$.subscribe(async () => {
-      
-//       console.log("===============================================================================================")
-//     });
-    // await ig.state.deserialize(cookies);
-    // await ig.account.login(username, password);
-    // const serialized = await ig.state.serialize();
-    // delete serialized.constants;
-    // console.log(serialized,)
-    let a = await loadSession('mahery_soul')
-    console.log(JSON.parse(a))
-    // saveSession('mahery_soul',serialized)
-    //// let a = await ig.friendship.create('3162844793')
-    // console.log(a)
+    let check = await loadSession(username)
+    if(check){
+      console.log(username," exist");
+      await ig.state.deserialize(JSON.parse(check));
+    }else{
+      console.log(username," login new");
+      await ig.account.login(username, password);
+      const serialized = await ig.state.serialize();
+      delete serialized.constants;
+      saveSession(username,serialized)
+    }
+    console.log("asdf",f)
+    // let af = await ig.friendship.create('3162844793')
+    // console.log(af)
     // if(!user){
     //   return false
     // }
