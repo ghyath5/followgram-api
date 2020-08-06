@@ -13,8 +13,7 @@
     "instagram-private-api": "^1.41.0",
     "jsonwebtoken": "^8.5.1",
     "graphql-request": "^2.0.0",
-    "cross-fetch": "^3.0.5",
-    "basic-instagram-user-details": "^1.0.2"
+    "cross-fetch": "^3.0.5"
   },
   "devDependencies": {
     "esm": "^3.2.25",

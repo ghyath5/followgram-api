@@ -1,5 +1,4 @@
 import { IgApiClient, IgCheckpointError } from 'instagram-private-api'
-const bud = require('basic-instagram-user-details');
 import Storage from './gqlClient'
 
 export default {
