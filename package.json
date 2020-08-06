@@ -12,8 +12,9 @@
     "node-fetch": "2.6.0",
     "instagram-private-api": "^1.41.0",
     "jsonwebtoken": "^8.5.1",
-    "graphql-request": "^3.0.0",
-    "cross-fetch": "^3.0.5"
+    "cross-fetch": "^3.0.5",
+    "graphql-request": "^2.0.0",
+    "aws-sdk": "^2.728.0"
   },
   "devDependencies": {
     "esm": "^3.2.25",
