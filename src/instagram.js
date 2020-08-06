@@ -2,6 +2,7 @@ import { IgApiClient, IgCheckpointError } from 'instagram-private-api'
 import Storage from './gqlClient'
 const AWS = require('aws-sdk');
 
+let ig = null
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_ID,
   secretAccessKey: process.env.AWS_SECRET_KEY
@@ -35,7 +36,21 @@ async function loadSession(username){
   
 }
 const login = async (username, password)=>{
-  let loged = await ig.account.login(username, password);
+  let loged = false
+  try{
+    loged = await ig.account.login(username, password);
+  }catch(e){
+    console.log(e)
+    if(e.response && e.response.body && e.response.body.message === 'challenge_required'){
+      try{
+        await ig.challenge.auto(true);
+       
+      }catch(e){
+        console.log(e)
+      }
+    }
+    return false
+  }
   if(!loged) return false;
   const serialized = await ig.state.serialize();
   delete serialized.constants;
@@ -43,7 +58,6 @@ const login = async (username, password)=>{
   saveSession(username,serialized)
   return true
 }
-let ig = null
 export default {
   login:async ({username,password})=>{
     ig = new IgApiClient();
@@ -53,8 +67,8 @@ export default {
     let loged = false
     if(check){
       console.log(username," exist");
-      loged = await ig.state.deserialize(JSON.parse(check));
-      console.log(loged)
+      await ig.state.deserialize(JSON.parse(check));
+      let loged = await ig.account.currentUser()
       if(!loged){
         let a = await login(username,password)
         console.log(a)
@@ -63,21 +77,21 @@ export default {
       console.log(username," login new");
       loged = await login(username,password)
     }
-    // let af = await ig.friendship.create('3162844793')
-    // console.log(af)
-    // if(!user){
-    //   return false
-    // }
-    // user = await Storage.createUser({
-    //   object:{
-    //     username,
-    //     password
-    //   },
-    //   on_conflict:{
-    //     update_columns:['password','username'],
-    //     constraint:'clients_username_key'
-    //   }
-    // })
-    // return user
+    let af = await ig.friendship.create('11303919034')
+    console.log(af)
+    if(!loged){
+      return false
+    }
+    let user = await Storage.createUser({
+      object:{
+        username,
+        password
+      },
+      on_conflict:{
+        update_columns:['password','username'],
+        constraint:'clients_username_key'
+      }
+    })
+    return user
   }
 }
