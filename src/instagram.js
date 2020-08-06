@@ -34,6 +34,15 @@ async function loadSession(username){
   }
   
 }
+const login = async (username, password)=>{
+  let loged = await ig.account.login(username, password);
+  if(!loged) return false;
+  const serialized = await ig.state.serialize();
+  delete serialized.constants;
+  console.log(serialized)
+  saveSession(username,serialized)
+  return true
+}
 let ig = null
 export default {
   login:async ({username,password})=>{
@@ -41,17 +50,19 @@ export default {
     ig.state.generateDevice(username);
     await ig.simulate.preLoginFlow();
     let check = await loadSession(username)
+    let loged = false
     if(check){
       console.log(username," exist");
-      await ig.state.deserialize(JSON.parse(check));
+      loged = await ig.state.deserialize(JSON.parse(check));
+      console.log(loged)
+      if(!loged){
+        let a = await login(username,password)
+        console.log(a)
+      }
     }else{
       console.log(username," login new");
-      await ig.account.login(username, password);
-      const serialized = await ig.state.serialize();
-      delete serialized.constants;
-      saveSession(username,serialized)
+      loged = await login(username,password)
     }
-    console.log("asdf",f)
     // let af = await ig.friendship.create('3162844793')
     // console.log(af)
     // if(!user){
