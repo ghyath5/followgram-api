@@ -28,4 +28,15 @@ app.post("/login", async (req, res) => {
   });
 });
 
+app.post('/send-verfication-code',async(req,res)=>{
+  const { code, username } = req.body.input;
+  let user = await instagram.verifyChallenge({code,username})
+  console.log(user)
+  
+  return res.json({
+    token: "<value>",
+    status: "<value>"
+  })
+})
+
 app.listen(PORT);

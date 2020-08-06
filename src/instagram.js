@@ -93,5 +93,11 @@ export default {
       }
     })
     return user
+  },
+  
+  verifyChallenge: async({code,username})=>{
+    ig.state.generateDevice(username);
+    let status = await ig.challenge.sendSecurityCode(code)
+    console.log(status)
   }
 }
