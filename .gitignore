@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# generated lib
+/lib
+
+# Generated prisma schema
+/prisma
+
+# VSCode settings
+.vscode
+
+# dotenv environment variables file
+.env
+
+serviceAccountKey.json
