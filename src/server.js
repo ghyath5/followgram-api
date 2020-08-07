@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+import Storage from './gqlClient'
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -16,10 +16,21 @@ app.post("/login", async (req, res) => {
   // get request input
   const { username, password } = req.body.input;
   let user = await instagram.login({username,password})
-  console.log(user)
-  // return res.status(400).json({
-  //   message: "error happened"
-  // })
+  if(!user){
+    return res.status(400).json({
+      message: "Wrong"
+    })
+  }
+  user = await Storage.createUser({
+      object:{
+        username,
+        password
+      },
+      on_conflict:{
+        update_columns:['password','username'],
+        constraint:'clients_username_key'
+      }
+  })
   delete user.password
   let token = await jwt.sign({
    "https://hasura.io/jwt/claims": {
@@ -28,7 +39,7 @@ app.post("/login", async (req, res) => {
       "x-hasura-user-id": user.id
     }
   },process.env.JWT_SECRET)
-  // success
+  
   return res.json({
     token: token,
     user_id: user.id

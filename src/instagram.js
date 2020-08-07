@@ -81,17 +81,8 @@ export default {
     if(!loged){
       return false
     }
-    let user = await Storage.createUser({
-      object:{
-        username,
-        password
-      },
-      on_conflict:{
-        update_columns:['password','username'],
-        constraint:'clients_username_key'
-      }
-    })
-    return user
+    
+    return loged
   },
   
   verifyChallenge: async({code,username})=>{
