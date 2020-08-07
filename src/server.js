@@ -39,10 +39,16 @@ app.post('/send-verfication-code',async(req,res)=>{
   const { code, username } = req.body.input;
   let user = await instagram.verifyChallenge({code,username})
   console.log(user)
-  
+  let token = await jwt.sign({
+   "https://hasura.io/jwt/claims": {
+      "x-hasura-allowed-roles": ["client","anonymous"],
+      "x-hasura-default-role": "client",
+      "x-hasura-user-id": user.id
+    }
+  },process.env.JWT_SECRET)
   return res.json({
-    token: "<value>",
-    status: "<value>"
+    token: token,
+    status: true
   })
 })
 
