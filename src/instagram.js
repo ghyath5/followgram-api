@@ -44,7 +44,6 @@ const login = async (username, password)=>{
     if(e.response && e.response.body && e.response.body.message === 'challenge_required'){
       try{
         await ig.challenge.auto(true);
-       
       }catch(e){
         console.log(e)
       }
@@ -54,7 +53,6 @@ const login = async (username, password)=>{
   if(!loged) return false;
   const serialized = await ig.state.serialize();
   delete serialized.constants;
-  console.log(serialized)
   saveSession(username,serialized)
   return true
 }
@@ -68,7 +66,7 @@ export default {
     if(check){
       console.log(username," exist");
       await ig.state.deserialize(JSON.parse(check));
-      let loged = await ig.account.currentUser()
+      loged = await ig.account.currentUser()
       if(!loged){
         let a = await login(username,password)
         console.log(a)
@@ -77,8 +75,9 @@ export default {
       console.log(username," login new");
       loged = await login(username,password)
     }
-    let af = await ig.friendship.create('11303919034')
-    console.log(af)
+    console.log(loged)
+    // let af = await ig.friendship.create('11303919034')
+    // console.log(af)
     if(!loged){
       return false
     }

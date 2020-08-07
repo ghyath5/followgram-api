@@ -16,11 +16,11 @@ app.post("/login", async (req, res) => {
   // get request input
   const { username, password } = req.body.input;
   let user = await instagram.login({username,password})
-  // console.log(user)
+  console.log(user)
   // return res.status(400).json({
   //   message: "error happened"
   // })
-
+  jwt.sign()
   // success
   return res.json({
     token: "<value>",

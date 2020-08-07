@@ -14,6 +14,7 @@ export default {
                 insert_clients_one(object:$object, on_conflict:$on_conflict){
                     username
                     password
+                    id
                 }
             }
         `,args)
