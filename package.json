@@ -15,7 +15,8 @@
     "cross-fetch": "^3.0.5",
     "graphql-request": "^2.0.0",
     "aws-sdk": "^2.728.0",
-    "nodemon": "1.18.4"
+    "nodemon": "1.18.4",
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "esm": "^3.2.25",
