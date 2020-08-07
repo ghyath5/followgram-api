@@ -1,0 +1,7 @@
+HAUSRA_KEY=
+
+HAUSRA_ENDPOINT=https://super-followgram.herokuapp.com/v1/graphql
+AWS_ACCESS_ID=
+AWS_BUCKET=
+AWS_SECRET_KEY=
+JWT_SECRET=
