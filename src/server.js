@@ -20,11 +20,18 @@ app.post("/login", async (req, res) => {
   // return res.status(400).json({
   //   message: "error happened"
   // })
-  jwt.sign()
+  delete user.password
+  let token = await jwt.sign({
+   "https://hasura.io/jwt/claims": {
+      "x-hasura-allowed-roles": ["client","anonymous"],
+      "x-hasura-default-role": "client",
+      "x-hasura-user-id": user.id
+    }
+  },process.env.JWT_SECRET)
   // success
   return res.json({
-    token: "<value>",
-    user_id: "<value>"
+    token: token,
+    user_id: user.id
   });
 });
 
