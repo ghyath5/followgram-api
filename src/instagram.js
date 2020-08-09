@@ -40,12 +40,17 @@ const login = async (username, password)=>{
   try{
     loged = await ig.account.login(username, password);
   }catch(e){
-    console.log(e)
-    if(e.response && e.response.body && e.response.body.message === 'challenge_required'){
-      try{
-        await ig.challenge.auto(true);
-      }catch(e){
-        console.log(e)
+    if(e.response && e.response.body){
+      let msg = e.response.body.message
+      console.log(username,msg);
+      if(msg === 'challenge_required'){
+        try{
+          await ig.challenge.auto(true);
+        }catch(e){
+          console.log(e)
+        }
+      }else if(msg.includes('password') && msg.includes('incorrect')){
+        Storage.deleteUser(username)
       }
     }
     return false
@@ -56,33 +61,32 @@ const login = async (username, password)=>{
   saveSession(username,serialized)
   return true
 }
-export default {
-  login:async ({username,password})=>{
-    ig = new IgApiClient();
-    ig.state.generateDevice(username);
-    await ig.simulate.preLoginFlow();
-    let check = await loadSession(username)
-    let loged = false
-    if(check){
-      console.log(username," exist");
-      await ig.state.deserialize(JSON.parse(check));
-      loged = await ig.account.currentUser()
-      if(!loged){
-        let a = await login(username,password)
-        console.log(a)
-      }
-    }else{
-      console.log(username," login new");
+const globalLogin = async ({username,password})=>{
+  ig = new IgApiClient();
+  ig.state.generateDevice(username);
+  await ig.simulate.preLoginFlow();
+  let check = await loadSession(username)
+  let loged = false
+  if(check){
+    console.log(username," exist");
+    await ig.state.deserialize(JSON.parse(check));
+    loged = await ig.account.currentUser()
+    if(!loged){
       loged = await login(username,password)
     }
-    console.log(loged)
-    // let af = await ig.friendship.create('11303919034')
-    // console.log(af)
-    if(!loged){
-      return false
-    }
-    
-    return loged
+  }else{
+    console.log(username," login new");
+    loged = await login(username,password)
+  }
+  if(!loged){
+    return false
+  }
+  
+  return loged
+}
+export default {
+  login:async (user)=>{
+    return await globalLogin(user)
   },
   
   verifyChallenge: async({code,username})=>{
@@ -90,5 +94,49 @@ export default {
     let status = await ig.challenge.sendSecurityCode(code)
     console.log(status)
     return status
+  },
+
+  follow: async (username)=>{
+    let followers = await Storage.getFollowers(username)
+    let count = 0
+    await asyncForEach(followers,async (follower)=>{
+      try{
+        let loged = await globalLogin({username:follower.username,password:follower.password})
+        if(!loged) return
+        let id = await ig.user.getIdByUsername(username)
+        let is = await ig.friendship.create(id)
+        if(is){
+          Storage.updateUser({
+              where:{
+                  id:{_eq:follower.id}
+              },
+              set:{
+                last_activity:new Date().toISOString()
+              }
+          })
+          count++
+        }
+      }catch(e){
+        console.log(e);
+      }
+    })
+    if(count){
+      let dat = new Date()
+      Storage.updateUser({
+        where:{
+          username:{_eq:username}
+        },
+        set:{
+          can: new Date(dat.setDate(dat.getDate()+1)).toISOString()
+        }
+      })
+    }
+    return count
+  }
+}
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
   }
 }

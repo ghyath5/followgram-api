@@ -9,9 +9,35 @@ import jwt from "jsonwebtoken";
 import instagram from './instagram'
 app.use(bodyParser.json());
 
-// paste the code from codegen here
-
-// Request Handler
+const IS_AUTH = async (req, res, next)=>{
+  if(!req.headers || !req.headers['authorization']){
+      res.status(400).json({
+          message:"Not authorized"
+      })
+      return
+  }
+  let token = req.headers['authorization']
+  try{
+      token = token.split('Bearer ')[1]
+      let hasuraClaims = jwt.verify(token,process.env.JWT_SECRET)
+      let user_id = hasuraClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']
+      let username = hasuraClaims['https://hasura.io/jwt/claims']['username']
+      if(user_id){
+          req.token = token
+          req.username = username
+          next()
+          return
+      }
+  }catch(e){
+      res.status(400).json({
+          message:"Not authorized"
+      })
+      return
+  }
+  res.status(400).json({
+      message:"Not authorized"
+  })
+}
 app.post("/login", async (req, res) => {
   // get request input
   const { username, password } = req.body.input;
@@ -36,7 +62,8 @@ app.post("/login", async (req, res) => {
    "https://hasura.io/jwt/claims": {
       "x-hasura-allowed-roles": ["client","anonymous"],
       "x-hasura-default-role": "client",
-      "x-hasura-user-id": user.id
+      "x-hasura-user-id": user.id,
+      'username':username
     }
   },process.env.JWT_SECRET)
   
@@ -60,6 +87,16 @@ app.post('/send-verfication-code',async(req,res)=>{
   return res.json({
     token: token,
     status: true
+  })
+})
+
+app.post('/follow', IS_AUTH, async (req, res)=>{
+  const { username } = req.body.input;
+
+  let count = await instagram.follow(username)
+  return res.json({
+    status:Boolean(count),
+    count
   })
 })
 
