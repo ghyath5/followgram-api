@@ -44,8 +44,12 @@ app.post("/login", async (req, res) => {
   let user = await instagram.login({username,password})
   if(!user){
     return res.status(400).json({
-      message: "Wrong"
+      message: "Error"
     })
+  }else if(user !== true){
+    return res.status(400).json({
+      message: user
+    }) 
   }
   user = await Storage.createUser({
       object:{
@@ -76,12 +80,17 @@ app.post("/login", async (req, res) => {
 app.post('/send-verfication-code',async(req,res)=>{
   const { code, username } = req.body.input;
   let user = await instagram.verifyChallenge({code,username})
-  console.log(user)
+  if(!user){
+    return res.status(400).json({
+      message: "Error"
+    })
+  }
   let token = await jwt.sign({
    "https://hasura.io/jwt/claims": {
       "x-hasura-allowed-roles": ["client","anonymous"],
       "x-hasura-default-role": "client",
-      "x-hasura-user-id": user.id
+      "x-hasura-user-id": user.id,
+      'username':username
     }
   },process.env.JWT_SECRET)
   return res.json({
@@ -100,4 +109,6 @@ app.post('/follow', IS_AUTH, async (req, res)=>{
   })
 })
 
-app.listen(PORT);
+app.listen(PORT,()=>{
+  console.log("listen on "+ PORT);
+});
